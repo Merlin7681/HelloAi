@@ -1,6 +1,4 @@
 # Default ignored files
-.DS_Store
-XiaozhiAgent/.DS_Store
+**/.DS_Store
 /.idea/
-/llm-demo/target/
-/XiaozhiAgent/target/
+**/target/
