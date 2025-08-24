@@ -1,0 +1,8 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="JavadocDeclaration" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ADDITIONAL_TAGS" value="SystemMessage(&quot;你是我的好朋友，请用东北话回答问题。&quot;)" />
+    </inspection_tool>
+  </profile>
+</component>
