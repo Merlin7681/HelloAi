@@ -104,15 +104,72 @@ Mac Docker Desktop - Setting - Dock Engine 中增加’registry-mirrors‘
 }
 ~~~
 
-（国内）拉取镜像
+**（国内）拉取镜像**
+
 ~~~shell
 docker pull mongodb/mongodb-community-server:latest
-docker pull docker.m.daocloud.io/mongodb/mongodb-community-server:latest
+#docker pull docker.m.daocloud.io/mongodb/mongodb-community-server:latest
 
-docker run --name mongodb -p 27017:27017 -d mongodb/mongodb-community-server:latest
+docker run --name mongodb -p 27017:27017 -d docker.m.daocloud.io/mongodb/mongodb-community-server:latest
 docker container ls
 
 # 使用 mongosh 连接到 MongoDB 部署
 docker exec -it mongodb bash
 # mongosh --port 27017
+
 ~~~
+
+**Redis**
+
+~~~shell
+# 拉取最新版本的Redis
+docker pull redis
+
+# 如需指定版本（例如6.2版本），可加上标签
+docker pull redis:6.2
+
+# 简单启动（默认配置，后台运行）
+docker run --name myredis -d redis
+
+# 带自定义配置的启动（推荐）
+# 1. 先创建本地配置文件目录（例如~/redis/conf），并放入redis.conf配置文件
+# 2. 启动时挂载配置文件和数据目录
+docker run --name myredis \
+  -p 6379:6379 \  # 映射容器端口到主机（主机端口:容器端口）
+  -v ~/redis/conf:/etc/redis \  # 挂载配置文件目录
+  -v ~/redis/data:/data \  # 挂载数据目录（持久化数据）
+  -d redis \
+  redis-server /etc/redis/redis.conf  # 指定使用挂载的配置文件启动
+
+# 进入myredis容器
+docker exec -it myredis bash
+
+# 在容器内启动redis-cli
+redis-cli
+~~~
+
+**RabbitMQ**
+
+~~~shell
+# 拉取最新版带管理界面的RabbitMQ
+docker pull rabbitmq:management
+# 若只需基础功能（无管理界面），可拉取默认标签镜像：docker pull rabbitmq
+
+# 如需指定版本（例如3.12.x），可指定标签
+docker pull rabbitmq:3.12-management
+
+docker run --name myrabbitmq -p 5672:5672 -p 15672:15672 -e RABBITMQ_DEFAULT_USER=admin -e RABBITMQ_DEFAULT_PASS=admin123 -d rabbitmq:management
+docker run --name myrabbitmq \
+  -p 5672:5672 \  # 基础通信端口（客户端连接用）
+  -p 15672:15672 \  # 管理界面端口（浏览器访问用）
+  -e RABBITMQ_DEFAULT_USER=admin \  # 自定义用户名
+  -e RABBITMQ_DEFAULT_PASS=admin123 \  # 自定义密码
+  -d rabbitmq:management
+
+# 进入容器
+docker exec -it myrabbitmq bash
+
+# 在容器内使用RabbitMQ命令行工具（例如查看用户）
+rabbitmqctl list_users
+~~~
+
